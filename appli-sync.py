@@ -1,4 +1,4 @@
-﻿##----- Importation des Modules -----##
+##----- Importation des Modules -----##
 from tkinter import *
 from tkinter import filedialog
 import os.path, time
@@ -28,7 +28,6 @@ def checkDirExistance(dirPath):# Vérification de l'existance d'un chemin de dos
         res=True
     return res
 
-
 def compareDirBIS(d1,d2):# Comparaison des fichiers entre deux dossiers
     res=False
     l=filecmp.dircmp(d1, d2).left_only
@@ -51,8 +50,6 @@ def compareDirBIS(d1,d2):# Comparaison des fichiers entre deux dossiers
         if (c2==[]):
             res = True
     return res
-
-
 
 
 def compareDir():# Comparaison des fichiers entre deux dossiers
@@ -225,8 +222,6 @@ def remiseZero(event):
     lblElementCommonFalse.configure(text='')
 
 
-def helloWorld():
-    lblResultComparison.configure(text="hello world")
 
 def deleteAnalysis():
     lblEtat.configure(text="")
