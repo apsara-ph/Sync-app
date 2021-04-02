@@ -1,15 +1,10 @@
-##----- Importation des Modules -----##
+﻿##----- Importation des Modules -----##
 from tkinter import *
 from tkinter import filedialog
 import os.path, time
 import filecmp
 import subprocess
 import os, shutil
-
-##----- Variables globales -----##
-dirPath1= "ProjetSynchro/monDossier1"
-dirPath2= "ProjetSynchro/monDossier2"
-dirPath3= "ProjetSynchro/monDossier3"
 
 ##----- Définition des Fonctions -----##
 
