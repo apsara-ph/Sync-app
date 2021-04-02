@@ -1,3 +1,2 @@
 # Sync-app
-Application de synchronisation de fichiers
-Mode de fonctionnement : Unidirectionnel
+Application de synchronisation de fichiers en mode unidirectionnel
