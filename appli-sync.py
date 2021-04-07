@@ -86,6 +86,7 @@ def compareDir():# Comparaison des fichiers entre deux dossiers
                         c2.append(c[i])
                 else:
                     if (compareDirBIS(d1+"/"+str(c[i]), d2+"/"+str(c[i]))==True):# A REVOIR
+                    if compareDirBIS(d1+"/"+str(c[i]), d2+"/"+str(c[i])):# A REVOIR
                         c1.append(c[i])
                     else:
                         c2.append(c[i])
@@ -168,49 +169,87 @@ def synchroDir():
         print("Analyse des manipulations de synchronisation")
         lblEtat.configure(text='Synchronization...')
         for i in range (len(l)):
-            print(l[i] + " à copier")
-            if os.path.isfile(d1+"/"+str(l[i]))==True:
-                shutil.copy(d1+"/"+str(l[i]), d2+"/"+str(l[i])) #copie de fichier
-                nb_creat+=1
-            else:
-                shutil.copytree(d1+"/"+str(l[i]), d2+"/"+str(l[i])) #copie de repertoire
-                nb_creat+=1
+            if str(EtyExtension.get()) in str(l[i]):
+                print(l[i] + " à copier")
+                if os.path.isfile(d1+"/"+str(l[i]))==True:
+                    shutil.copy(d1+"/"+str(l[i]), d2+"/"+str(l[i])) #copie de fichier
+                    nb_creat+=1
+                else:
+                    shutil.copytree(d1+"/"+str(l[i]), d2+"/"+str(l[i])) #copie de repertoire
+                    nb_creat+=1
         l=[]
         for i in range (len(r)):
-            print(r[i] + " à supprimer")
-            if os.path.isfile(d2+"/"+str(r[i]))==True:
-                os.remove(d2+"/"+str(r[i])) #supression d'un fichier
-                nb_del+=1
-            else:
-                shutil.rmtree(os.path.join(d2,str(r[i]))) #supression d'un repertoire
-                nb_del+=1
+            if str(EtyExtension.get()) in str(r[i]):
+                print(r[i] + " à supprimer")
+                if os.path.isfile(d2+"/"+str(r[i]))==True:
+                    os.remove(d2+"/"+str(r[i])) #supression d'un fichier
+                    nb_del+=1
+                else:
+                    shutil.rmtree(os.path.join(d2,str(r[i]))) #supression d'un repertoire
+                    nb_del+=1
         r=[]
         for i in range(len(c)):
-            if os.path.isfile(d1+"/"+str(c[i]))==True:
-                if (filecmp.cmp(d1+"/"+str(c[i]), d2+"/"+str(c[i]), shallow=True)==True):
-                    print(str(c[i])+": OK !")
+            if str(EtyExtension.get()) in str(c[i]):
+                if os.path.isfile(d1+"/"+str(c[i]))==True:
+                    if (filecmp.cmp(d1+"/"+str(c[i]), d2+"/"+str(c[i]), shallow=True)==True):
+                        print(str(c[i])+": OK !")
+                    else:
+                        print(c[i]+": Contenu de fichier différent")
+                        os.remove(d2+"/"+str(c[i])) # supression de l'ancien fichier
+                        shutil.copy(d1+"/"+str(c[i]), d2+"/"+str(c[i])) #copie du nouveau fichier
+                        nb_modif+=1
                 else:
-                    print(c[i]+": Contenu de fichier différent")
-                    os.remove(d2+"/"+str(c[i])) # supression de l'ancien fichier
-                    shutil.copy(d1+"/"+str(c[i]), d2+"/"+str(c[i])) #copie du nouveau fichier
-                    nb_modif+=1
-            else:
-                if (synchroDirBIS(d1+"/"+str(c[i]), d2+"/"+str(c[i]))==True):# A REVOIR
-                    print(str(c[i])+": OK !")
-                    nb_modif+=nb_modifBIS
-                    nb_creat+=nb_creatBIS
-                    nb_del+=nb_delBIS
-                else:
-                    shutil.rmtree(os.path.join(d2,str(c[i])))
-                    shutil.copytree(d1+"/"+str(c[i]), d2+"/"+str(c[i]))
-                    nb_modif+=1
+                    if (synchroDirBIS(d1+"/"+str(c[i]), d2+"/"+str(c[i]))==True):# A REVOIR
+                        print(str(c[i])+": OK !")
+                        nb_modif+=nb_modifBIS
+                        nb_creat+=nb_creatBIS
+                        nb_del+=nb_delBIS
+                    else:
+                        shutil.rmtree(os.path.join(d2,str(c[i])))
+                        shutil.copytree(d1+"/"+str(c[i]), d2+"/"+str(c[i]))
+                        nb_modif+=1
         res=True
         lblOperations.configure(text='Operations')
         lblAllOperations.configure(text='Modified : '+ str(nb_modif)+', Created : '+ str(nb_creat) +', Deleted : '+ str(nb_del))
         compareDir()
     return res
 
+import threading
+ 
+class Intervallometre(threading.Thread):
+    
+    def __init__(self, duree, fonction):
+        threading.Thread.__init__(self)
+        self.duree = duree
+        self.fonction = fonction
+        self.encore = True  # pour permettre l'arret a la demande
+ 
+    def run(self):
+        while self.encore:
+            self.timer = threading.Timer(self.duree, self.fonction)
+            self.timer.setDaemon(True)
+            self.timer.start()
+            self.timer.join()
+ 
+    def stop(self):
+        self.encore = False  # pour empecher un nouveau lancement de Timer et terminer le thread
+        
+def modeContinuOn():
+    print("mode continu")
+    lblMode.configure(text="Mode Continu activé")
+    global tCompare,tSynchro
+    tCompare=Intervallometre(10,compareDir)
+    tCompare.setDaemon(True)
+    tCompare.start()
+    tSynchro=Intervallometre(10,synchroDir)
+    tSynchro.setDaemon(True)
+    tSynchro.start()
 
+def modeContinuOff():
+    print("arret du mode continu")
+    lblMode.configure(text="Mode Continu desactivé")
+    tCompare.stop()
+    tSynchro.stop()
 
 def remiseZero(event):
     lblLeft.configure(text='')
