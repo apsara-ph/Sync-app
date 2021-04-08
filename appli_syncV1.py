@@ -6,6 +6,7 @@ import filecmp
 import subprocess
 import os, shutil
 import sqlite3
+import threading
 
 ##----- Définition des Fonctions -----##
 
@@ -280,15 +281,42 @@ def sizeDir(path): # Calcul de la taille d'un dossier en octets
     else:
         print("Le chemin saisie n'existe pas")
 
+##----- Fonctions annexes pour intégration DB -----##
+
 def convertMonth(m):
     res='00'
     l=['Jan','Fev','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
     for i in range(len(l)):
         if (m==l[i]):
-            res=str(i+1)
+            if (i<9):
+                res='0'+str(i+1)
+            else:
+                res=str(i+1)
     return res
 
-##----- Création de la DB -----##
+def formatCreationDay(filePath):
+    jj= time.ctime(os.path.getctime(filePath))[8:10]
+    mm=time.ctime(os.path.getctime(filePath))[4:7]
+    aaaa=time.ctime(os.path.getctime(filePath))[20:24]
+    if (int(jj)<10):
+        jj= time.ctime(os.path.getctime(filePath))[9:10]
+        dd = '0'+jj+convertMonth(mm)+aaaa
+    else:
+        dd = jj+convertMonth(mm)+aaaa
+    return dd
+
+def formatModificationDay(filePath):
+    jj= time.ctime(os.path.getmtime(filePath))[8:10]
+    mm=time.ctime(os.path.getmtime(filePath))[4:7]
+    aaaa=time.ctime(os.path.getmtime(filePath))[20:24]
+    if (int(jj)<10):
+        jj= time.ctime(os.path.getmtime(filePath))[9:10]
+        dd = '0'+jj+convertMonth(mm)+aaaa
+    else:
+        dd = jj+convertMonth(mm)+aaaa
+    return dd
+
+##----- Fonctions DB -----##
 
 def genBDD():
     d1=repLeft
@@ -306,7 +334,6 @@ def genBDD():
     curseur.execute("CREATE TABLE IF NOT EXISTS Files (id INTEGER PRIMARY KEY AUTOINCREMENT, nameFile TEXT NOT NULL, localisation TEXT NOT NULL, manipulation TEXT NOT NULL, creationDate VARCHAR(50),creationTime TEXT, lastModificationDate VARCHAR(50),lastModificationTime VARCHAR(50), size INTEGER,state INTEGER)") # Création de la base de données
     baseDeDonnees.commit() # On envoie la requête SQL
 
-    
 
     for i in range(len(c)):
         if os.path.isfile(d1+"/"+str(c[i]))==True:
@@ -326,18 +353,12 @@ def genBDD():
         timeCreation=time.ctime(os.path.getctime(filePath))[11:19] ####
         timeCreation0=timeCreation[0:2]+timeCreation[3:5]+timeCreation[6:8]
 
-        jjc= time.ctime(os.path.getctime(filePath))[8:10]
-        mmc=time.ctime(os.path.getctime(filePath))[4:7]
-        aaaac=time.ctime(os.path.getctime(filePath))[20:24]
-        dateCreation = jjc+convertMonth(mmc)+aaaac
+        dateCreation=formatCreationDay(filePath)
 
         timeModification=time.ctime(os.path.getmtime(filePath))[11:19] ####
         timeModification0=timeModification[0:2]+timeModification[3:5]+timeModification[6:8]
 
-        jjm= time.ctime(os.path.getmtime(filePath))[8:10]
-        mmm=time.ctime(os.path.getmtime(filePath))[4:7]
-        aaaam=time.ctime(os.path.getmtime(filePath))[20:24]
-        dateModification = jjm+convertMonth(mmm)+aaaam
+        dateModification=formatModificationDay(filePath)
 
         sizeFile=str(os.path.getsize(filePath)) #size
 
@@ -352,18 +373,12 @@ def genBDD():
         timeCreation=time.ctime(os.path.getctime(filePath))[11:19] ####
         timeCreation0=timeCreation[0:2]+timeCreation[3:5]+timeCreation[6:8]
 
-        jjc= time.ctime(os.path.getctime(filePath))[8:10]
-        mmc=time.ctime(os.path.getctime(filePath))[4:7]
-        aaaac=time.ctime(os.path.getctime(filePath))[20:24]
-        dateCreation = jjc+convertMonth(mmc)+aaaac
+        dateCreation=formatCreationDay(filePath)
 
         timeModification=time.ctime(os.path.getmtime(filePath))[11:19] ####
         timeModification0=timeModification[0:2]+timeModification[3:5]+timeModification[6:8]
 
-        jjm= time.ctime(os.path.getmtime(filePath))[8:10]
-        mmm=time.ctime(os.path.getmtime(filePath))[4:7]
-        aaaam=time.ctime(os.path.getmtime(filePath))[20:24]
-        dateModification = jjm+convertMonth(mmm)+aaaam
+        dateModification=formatModificationDay(filePath)
 
         sizeFile=str(os.path.getsize(filePath)) #size
 
@@ -377,18 +392,12 @@ def genBDD():
         timeCreation=time.ctime(os.path.getctime(filePath))[11:19] ####
         timeCreation0=timeCreation[0:2]+timeCreation[3:5]+timeCreation[6:8]
 
-        jjc= time.ctime(os.path.getctime(filePath))[8:10]
-        mmc=time.ctime(os.path.getctime(filePath))[4:7]
-        aaaac=time.ctime(os.path.getctime(filePath))[20:24]
-        dateCreation = jjc+convertMonth(mmc)+aaaac
+        dateCreation=formatCreationDay(filePath)
 
         timeModification=time.ctime(os.path.getmtime(filePath))[11:19] ####
         timeModification0=timeModification[0:2]+timeModification[3:5]+timeModification[6:8]
 
-        jjm= time.ctime(os.path.getmtime(filePath))[8:10]
-        mmm=time.ctime(os.path.getmtime(filePath))[4:7]
-        aaaam=time.ctime(os.path.getmtime(filePath))[20:24]
-        dateModification = jjm+convertMonth(mmm)+aaaam
+        dateModification=formatModificationDay(filePath)
 
         sizeFile=str(os.path.getsize(filePath)) #size
 
@@ -396,34 +405,23 @@ def genBDD():
         curseur.execute("INSERT INTO Files (nameFile, localisation,manipulation,creationDate,creationTime,lastModificationDate,lastModificationTime,size,state) VALUES (?,?,?,?,?,?,?,?,?)",data)
 
     
-
     for i in range(len(c2)): #modifié  
         filePath=d2+"/"+str(c2[i]) 
             
         timeCreation=time.ctime(os.path.getctime(filePath))[11:19] ####
         timeCreation0=timeCreation[0:2]+timeCreation[3:5]+timeCreation[6:8]
 
-        jjc= time.ctime(os.path.getctime(filePath))[8:10]
-        mmc=time.ctime(os.path.getctime(filePath))[4:7]
-        aaaac=time.ctime(os.path.getctime(filePath))[20:24]
-        dateCreation = jjc+convertMonth(mmc)+aaaac
+        dateCreation=formatCreationDay(filePath)
 
         timeModification=time.ctime(os.path.getmtime(filePath))[11:19] ####
         timeModification0=timeModification[0:2]+timeModification[3:5]+timeModification[6:8]
 
-        jjm= time.ctime(os.path.getmtime(filePath))[8:10]
-        mmm=time.ctime(os.path.getmtime(filePath))[4:7]
-        aaaam=time.ctime(os.path.getmtime(filePath))[20:24]
-        dateModification = jjm+convertMonth(mmm)+aaaam
+        dateModification=formatModificationDay(filePath)
 
         sizeFile=str(os.path.getsize(filePath)) #size
 
         data=(c2[i],'both','à modifier', dateCreation,timeCreation0,dateModification,timeModification0,sizeFile,0)
         curseur.execute("INSERT INTO Files (nameFile, localisation, manipulation,creationDate,creationTime,lastModificationDate,lastModificationTime,size,state) VALUES (?,?,?,?,?,?,?,?,?)",data)
-
-    #curseur.execute("SELECT * FROM Files")
-    #for resultat in curseur:
-    #    print(resultat)
 
     baseDeDonnees.commit()
     baseDeDonnees.close()
@@ -441,9 +439,8 @@ def afficherBDD():
     baseDeDonnees.commit()
     baseDeDonnees.close()
 
+##----- Mode de fonctionnement -----##
 
-import threading
- 
 class Intervallometre(threading.Thread):
     
     def __init__(self, duree, fonction):
@@ -494,29 +491,24 @@ lblLeftDir.grid(row=0, column=1, columnspan=10, padx=3, pady=8, sticky=S+W+E)
 lblLeftDir=Label(fen , text ="Left Folder :")
 lblLeftDir.grid(row=1, column=1, padx=3, pady=8, sticky=S+W+E)
 
-lblLeft = Label(fen,bg = 'grey', width="30", font=("Helvetica", 10),
-                    highlightcolor= "green", relief=FLAT)
+lblLeft = Label(fen,bg = 'grey', width="30", font=("Helvetica", 10), highlightcolor= "green", relief=FLAT)
 lblLeft.grid(row=1, column=2, padx=3, pady=8, sticky=S+W+E)
 
-lblLeftDirSize = Label(fen,bg = 'white', width="30", font=("Helvetica", 10),
-                    highlightcolor= "green", relief=FLAT)
+lblLeftDirSize = Label(fen,bg = 'white', width="30", font=("Helvetica", 10), highlightcolor= "green", relief=FLAT)
 lblLeftDirSize.grid(row=2, column=2, padx=3, pady=8, sticky=S+W+E)
 
 btnLeftDir = Button(fen, text='Browse...', width='10',bg='white', command = selectLeftFolder)
 btnLeftDir.grid(row=1, column=3, padx=3, pady=8, sticky=S+W+E)
 
 
-
 #Dossier de droite
 lblRightDir=Label(fen , text ="Right Folder :")
 lblRightDir.grid(row=1, column=6, padx=3, pady=8, sticky=S+W+E)
 
-lblRight = Label(fen,bg = 'grey', width="30", font=("Helvetica", 10),
-                    highlightcolor= "green", relief=FLAT)
+lblRight = Label(fen,bg = 'grey', width="30", font=("Helvetica", 10), highlightcolor= "green", relief=FLAT)
 lblRight.grid(row=1, column=7, padx=3, pady=8, sticky=S+W+E)
 
-lblRightDirSize = Label(fen,bg = 'white', width="30", font=("Helvetica", 10),
-                    highlightcolor= "green", relief=FLAT)
+lblRightDirSize = Label(fen,bg = 'white', width="30", font=("Helvetica", 10), highlightcolor= "green", relief=FLAT)
 lblRightDirSize.grid(row=2, column=7, padx=3, pady=8, sticky=S+W+E)
 
 btnRightDir = Button(fen, text='Browse...', width='10',bg='white', command = selectRightFolder)
@@ -528,26 +520,18 @@ btnRightDir.grid(row=1, column=8, padx=3, pady=8, sticky=S+W+E)
 
 
 
-
-
-
-
-#Resultat
-
+#Results
 lblEtat=Label(fen, font=("Helvetica", 10))
 lblEtat.grid(row=9, column=1, columnspan=10, padx=3, pady=8, sticky=S+W+E)
 
-
 lblDifferences=Label(fen , font=("Helvetica", 12))
 lblDifferences.grid(row=10, column=1, columnspan=10, padx=3, pady=8, sticky=S+W+E)
-
 
 lblOnlyLeftElement=Label(fen)
 lblOnlyLeftElement.grid(row=11, column=1, columnspan=5, padx=3, pady=8, sticky=S+W+E)
 
 lblElementInLeftOnly = Label(fen, font=("Helvetica", 10))
 lblElementInLeftOnly.grid(row=12, column=1, columnspan=5, padx=3, pady=8)
-
 
 lblOnlyRightElement=Label(fen)
 lblOnlyRightElement.grid(row=11, column=5, columnspan=5, padx=3, pady=8, sticky=S+W+E)
@@ -572,7 +556,6 @@ lblSameElementTrue.grid(row=16, column=5, columnspan=5, padx=3, pady=8, sticky=S
 lblElementCommonTrue = Label(fen, font=("Helvetica", 10))
 lblElementCommonTrue.grid(row=17, column=5, columnspan=5, padx=3, pady=8)
 
-
 lblOperations=Label(fen, font=("Helvetica", 12))
 lblOperations.grid(row=19, column=1, columnspan=10, padx=3, pady=8)
 
@@ -582,12 +565,11 @@ lblAllOperations.grid(row=20, column=1, columnspan=10, padx=3, pady=8)
 
 
 ##----- Bouton Analysis -----##
-
 btnStartAnalysis = Button(fen, text='ANALYSIS', width='8',bg='pale green', command=compareDir)
 btnStartAnalysis.grid(row=1, column=9, padx=3, pady=8)
 #btnStartAnalysis.focus_set()
 
-##----- Bouton Delete -----##
+##----- Bouton Reset -----##
 btnDeleteAnalysis = Button(fen, text='RESET', width='8',bg='light pink', command=deleteAnalysis)
 btnDeleteAnalysis.grid(row=1, column=10, padx=3, pady=8)
 
@@ -595,9 +577,7 @@ btnDeleteAnalysis.grid(row=1, column=10, padx=3, pady=8)
 btnSynchro = Button(fen, text='SYNCHRO', width='10',bg='light sky blue', command=synchroDir)
 btnSynchro.grid(row=3, column=10, padx=3, pady=8)
 
-
-
-##----- Bouton ON/OFF -----##
+##----- Bouton Mode Continu ON/OFF -----##
 btnContinuOn = Button(fen, text='ON', width='10',bg='green', command=modeContinuOn)
 btnContinuOn.grid(row=5, column=10, padx=3, pady=8)
 
@@ -606,7 +586,6 @@ btnContinuOff.grid(row=6, column=10, padx=3, pady=8)
 
 lblMode=Label(fen, font=("Helvetica", 6))
 lblMode.grid(row=7, column=10, padx=3, pady=8)
-
 
 
 ##----- Bouton BDD -----##
@@ -622,8 +601,9 @@ bouton_quitter.grid(row=20,column=10, padx=3, pady=10)
 lblExtension = Label(fen, text = "Extension:")
 lblExtension.grid(row=3,column=4, padx=3, pady=10)
 EtyExtension = Entry(fen, bd = 5)
-EtyExtension.insert(END, 'Exemple: .txt')
+EtyExtension.insert(END, 'Exemple.txt')
 EtyExtension.grid(row=3,column=5, padx=3, pady=10)
+EtyExtension.bind("<FocusIn>", lambda args: EtyExtension.delete('0', 'end'))
 
 
 ##----- Les évènements -----##
