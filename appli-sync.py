@@ -115,7 +115,7 @@ def synchroDirBIS(d1,d2):
         for i in range (len(l)):
             print(l[i] + " à copier")
             if os.path.isfile(d1+"/"+str(l[i]))==True:
-                if str(EtyExtension.get()) in str(l[i]):
+                if (str(EtyExtension.get()) == str(l[i]).split('.')[-1]) or (str(EtyExtension.get()) == ""):
                     shutil.copy(d1+"/"+str(l[i]), d2+"/"+str(l[i])) #copie de fichier
                     nb_creatBIS+=1
             else:
@@ -125,7 +125,7 @@ def synchroDirBIS(d1,d2):
         for i in range (len(r)):
                 print(r[i] + " à supprimer")
                 if os.path.isfile(d2+"/"+str(r[i]))==True:
-                    if str(EtyExtension.get()) in str(r[i]):
+                    if (str(EtyExtension.get()) == str(r[i]).split('.')[-1]) or (str(EtyExtension.get()) == ""):
                         os.remove(d2+"/"+str(r[i])) #supression d'un fichier
                         nb_delBIS+=1
                 else:
@@ -134,7 +134,7 @@ def synchroDirBIS(d1,d2):
         r=[]
         for i in range(len(c)):
             if os.path.isfile(d1+"/"+str(c[i]))==True:
-                if str(EtyExtension.get()) in str(c[i]):
+                if (str(EtyExtension.get()) == str(c[i]).split('.')[-1]) or (str(EtyExtension.get()) == ""):
                     if (filecmp.cmp(d1+"/"+str(c[i]), d2+"/"+str(c[i]), shallow=True)==True):
                         print(str(c[i])+": OK !")
                     else:
@@ -160,8 +160,6 @@ def synchroDir():
     nb_modif=0
     nb_creat=0
 
-    
-    
     d1=repLeft
     d2=repRight
     res=False
@@ -177,7 +175,7 @@ def synchroDir():
         for i in range (len(l)):
             print(l[i] + " à copier")
             if os.path.isfile(d1+"/"+str(l[i]))==True:
-                if str(EtyExtension.get()) == str(l[i]).split('.')[-1]:
+                if (str(EtyExtension.get()) == str(l[i]).split('.')[-1]) or (str(EtyExtension.get()) == ""):
                     shutil.copy(d1+"/"+str(l[i]), d2+"/"+str(l[i])) #copie de fichier
                     nb_creat+=1
             else:
@@ -187,7 +185,7 @@ def synchroDir():
         for i in range (len(r)):
             print(r[i] + " à supprimer")
             if os.path.isfile(d2+"/"+str(r[i]))==True:
-                if str(EtyExtension.get()) == str(r[i]).split('.')[-1]:
+                if (str(EtyExtension.get()) == str(r[i]).split('.')[-1]) or (str(EtyExtension.get()) == ""):
                     os.remove(d2+"/"+str(r[i])) #supression d'un fichier
                     nb_del+=1
             else:
@@ -196,7 +194,7 @@ def synchroDir():
         r=[]
         for i in range(len(c)):
             if os.path.isfile(d1+"/"+str(c[i]))==True:
-                if str(EtyExtension.get()) == str(c[i]).split('.')[-1]:
+                if (str(EtyExtension.get()) == str(c[i]).split('.')[-1]) or (str(EtyExtension.get()) == ""):
                     if (filecmp.cmp(d1+"/"+str(c[i]), d2+"/"+str(c[i]), shallow=True)==True):
                         print(str(c[i])+": OK !")
                     else:
