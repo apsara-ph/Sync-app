@@ -1,9 +1,8 @@
 ##----- Importation des Modules -----##
 from tkinter import *
-import tkinter as tk
 from tkinter import filedialog
-import os.path, time, filecmp, subprocess, os, shutil
-import sqlite3
+import tkinter as tk
+import os.path, time, filecmp, subprocess, os, shutil, sqlite3
 from intervallometre import Intervallometre
 from extEntry import ExtEntry
 
@@ -23,13 +22,13 @@ def selectRightFolder():
         lblRight.configure(text="%s" % repRight)
     return repRight
 
-def checkDirExistance(dirPath):# Vérification de l'existance d'un chemin de dossier
+def checkDirExistance(dirPath): # Vérification de l'existence d'un chemin
     res=False
     if os.path.isdir(dirPath):
         res=True
     return res
 
-def compareDirBIS(d1,d2):# Comparaison des fichiers entre deux dossiers
+def compareDirBIS(d1,d2):
     res=False
     l=filecmp.dircmp(d1, d2).left_only
     r=filecmp.dircmp(d1, d2).right_only
@@ -44,7 +43,7 @@ def compareDirBIS(d1,d2):# Comparaison des fichiers entre deux dossiers
                 else:
                     c2.append(c[i])
             else:
-                if (synchroDirBIS(d1+"/"+str(c[i]), d2+"/"+str(c[i]))==True):# A REVOIR
+                if (synchroDirBIS(d1+"/"+str(c[i]), d2+"/"+str(c[i]))==True):
                     c1.append(c[i])
                 else:
                     c2.append(c[i])
@@ -52,7 +51,7 @@ def compareDirBIS(d1,d2):# Comparaison des fichiers entre deux dossiers
             res = True
     return res
 
-def compareDir():# Comparaison des fichiers entre deux dossiers
+def compareDir(): # Comparaison entre deux dossiers
     d1=repLeft
     d2=repRight
     if (checkDirExistance(d1)==True and checkDirExistance(d2)==True):
@@ -67,15 +66,14 @@ def compareDir():# Comparaison des fichiers entre deux dossiers
             lblOnlyRightElement.configure(text='Only in right folder :')
             lblSimilarities.configure(text='Similarities')
             lblSameElementFalse.configure(text='Same name/different content')
-            lblSameElementTrue.configure(text='Same name/same content')
-            #filecmp.dircmp(d1, d2).report_full_closure()   
+            lblSameElementTrue.configure(text='Same name/same content')  
             l=filecmp.dircmp(d1, d2).left_only
             r=filecmp.dircmp(d1, d2).right_only
             c=filecmp.dircmp(d1, d2).common
 
             lblElementInLeftOnly.configure(text=l)
             lblElementInRightOnly.configure(text=r)
-            #lblElementCommon.configure(text=c) #lblElementCommon.configure(text='%s' % c)
+
             c1=[]
             c2=[]
             for i in range(len(c)):
@@ -85,7 +83,7 @@ def compareDir():# Comparaison des fichiers entre deux dossiers
                     else:
                         c2.append(c[i])
                 else:
-                    if (compareDirBIS(d1+"/"+str(c[i]), d2+"/"+str(c[i]))==True):# A REVOIR
+                    if (compareDirBIS(d1+"/"+str(c[i]), d2+"/"+str(c[i]))==True):
                         c1.append(c[i])
                     else:
                         c2.append(c[i])
@@ -124,10 +122,10 @@ def synchroDirBIS(d1,d2):
             if (str(EtyExtension.get()) == str(r[i]).split('.')[-1]) or (str(EtyExtension.get()) == ""):
                 print(r[i] + " à supprimer")
                 if os.path.isfile(d2+"/"+str(r[i]))==True:
-                    os.remove(d2+"/"+str(r[i])) #supression d'un fichier
+                    os.remove(d2+"/"+str(r[i])) #supression du fichier
                     nb_delBIS+=1
                 else:
-                    shutil.rmtree(os.path.join(d2,str(r[i]))) #supression d'un repertoire
+                    shutil.rmtree(os.path.join(d2,str(r[i]))) #supression du repertoire
                     nb_delBIS+=1
         r=[]
         for i in range(len(c)):
@@ -137,11 +135,11 @@ def synchroDirBIS(d1,d2):
                         print(str(c[i])+": OK !")
                     else:
                         print(c[i]+": Contenu de fichier différent")
-                        os.remove(d2+"/"+str(c[i])) # supression de l'ancien fichier
+                        os.remove(d2+"/"+str(c[i])) #supression du fichier
                         shutil.copy(d1+"/"+str(c[i]), d2+"/"+str(c[i])) #copie du nouveau fichier
                         nb_modifBIS+=1
             else:
-                if (synchroDirBIS(d1+"/"+str(c[i]), d2+"/"+str(c[i]))==True):# A REVOIR
+                if (synchroDirBIS(d1+"/"+str(c[i]), d2+"/"+str(c[i]))==True):
                     print(str(c[i])+": OK !")
                 else:
                     shutil.rmtree(os.path.join(d2,str(c[i])))
@@ -150,7 +148,7 @@ def synchroDirBIS(d1,d2):
         res=True
     return res
 
-def synchroDir():
+def synchroDir(): # Synchronisation des dossiers
     global nb_del
     global nb_modif 
     global nb_creat
@@ -184,10 +182,10 @@ def synchroDir():
             if (str(EtyExtension.get()) == str(r[i]).split('.')[-1]) or (str(EtyExtension.get()) == ""):
                 print(r[i] + " à supprimer")
                 if os.path.isfile(d2+"/"+str(r[i]))==True:
-                    os.remove(d2+"/"+str(r[i])) #supression d'un fichier
+                    os.remove(d2+"/"+str(r[i])) #supression du fichier
                     nb_del+=1
                 else:
-                    shutil.rmtree(os.path.join(d2,str(r[i]))) #supression d'un repertoire
+                    shutil.rmtree(os.path.join(d2,str(r[i]))) #supression du repertoire
                     nb_del+=1
         r=[]
         for i in range(len(c)):
@@ -197,7 +195,7 @@ def synchroDir():
                         print(str(c[i])+": OK !")
                     else:
                         print(c[i]+": Contenu de fichier différent")
-                        os.remove(d2+"/"+str(c[i])) # supression de l'ancien fichier
+                        os.remove(d2+"/"+str(c[i])) #supression du fichier
                         shutil.copy(d1+"/"+str(c[i]), d2+"/"+str(c[i])) #copie du nouveau fichier
                         nb_modif+=1
             else:
@@ -225,7 +223,6 @@ def remiseZero(event):
     lblElementInLeftOnly.configure(text="")
     lblOnlyRightElement.configure(text="")
     lblElementInRightOnly.configure(text="")
-    #lblElementCommon.configure(text="")
     lblSimilarities.configure(text="")
     lblSameElementFalse.configure(text="")
     lblElementCommonFalse.configure(text="")
@@ -237,8 +234,8 @@ def remiseZero(event):
     try:
         baseDeDonnees = sqlite3.connect('files.db')
         curseur = baseDeDonnees.cursor()
-        curseur.execute("DROP TABLE IF EXISTS Files") # Création de la base de données
-        baseDeDonnees.commit() # On envoie la requête SQL
+        curseur.execute("DROP TABLE IF EXISTS Files") # Suppression des données
+        baseDeDonnees.commit()
         print("Données supprimées")
         baseDeDonnees.close()
     except sqlite3.Error as error:
@@ -251,7 +248,6 @@ def deleteAnalysis():
     lblElementInLeftOnly.configure(text="")
     lblOnlyRightElement.configure(text="")
     lblElementInRightOnly.configure(text="")
-    #lblElementCommon.configure(text="")
     lblSimilarities.configure(text="")
     lblSameElementFalse.configure(text="")
     lblElementCommonFalse.configure(text="")
@@ -263,14 +259,14 @@ def deleteAnalysis():
     try:
         baseDeDonnees = sqlite3.connect('files.db')
         curseur = baseDeDonnees.cursor()
-        curseur.execute("DROP TABLE IF EXISTS Files") # Création de la base de données
-        baseDeDonnees.commit() # On envoie la requête SQL
+        curseur.execute("DROP TABLE IF EXISTS Files") # Suppression des données
+        baseDeDonnees.commit()
         print("Données supprimées")
         baseDeDonnees.close()
     except sqlite3.Error as error:
         print("Problème de suppression")
 
-def sizeDir(path): # Calcul de la taille d'un dossier en octets
+def sizeDir(path): # Taille d'un dossier en octets
     size=0
     if checkDirExistance(path)==True:
         for root, dirs, files in os.walk(path):
@@ -280,7 +276,7 @@ def sizeDir(path): # Calcul de la taille d'un dossier en octets
     else:
         print("Le chemin saisie n'existe pas")
 
-##----- Fonctions annexes pour intégration DB -----##
+##----- Fonctions annexes pour intégration BDD -----##
 
 def convertMonth(m):
     res='00'
@@ -293,7 +289,7 @@ def convertMonth(m):
                 res=str(i+1)
     return res
 
-def formatCreationDay(filePath):
+def formatCreationDay(filePath): # Retourne la date au format jjmmaaaa
     jj= time.ctime(os.path.getctime(filePath))[8:10]
     mm=time.ctime(os.path.getctime(filePath))[4:7]
     aaaa=time.ctime(os.path.getctime(filePath))[20:24]
@@ -331,7 +327,7 @@ def genBDD():
     baseDeDonnees = sqlite3.connect('files.db')
     curseur = baseDeDonnees.cursor()
     curseur.execute("CREATE TABLE IF NOT EXISTS Files (id INTEGER PRIMARY KEY AUTOINCREMENT, nameFile TEXT NOT NULL, localisation TEXT NOT NULL, manipulation TEXT NOT NULL, creationDate VARCHAR(50),creationTime TEXT, lastModificationDate VARCHAR(50),lastModificationTime VARCHAR(50), size INTEGER,state INTEGER)") # Création de la base de données
-    baseDeDonnees.commit() # On envoie la requête SQL
+    baseDeDonnees.commit() 
 
 
     for i in range(len(c)):
@@ -341,64 +337,64 @@ def genBDD():
             else:
                 c2.append(c[i])
         else:
-            if (compareDirBIS(d1+"/"+str(c[i]), d2+"/"+str(c[i]))==True):# A REVOIR
+            if (compareDirBIS(d1+"/"+str(c[i]), d2+"/"+str(c[i]))==True):
                 c1.append(c[i])
             else:
                 c2.append(c[i])
 
-    for i in range(len(l)):#copié
+    for i in range(len(l)): #copié
         filePath=d1+"/"+str(l[i])
 
-        timeCreation=time.ctime(os.path.getctime(filePath))[11:19] ####
+        timeCreation=time.ctime(os.path.getctime(filePath))[11:19] 
         timeCreation0=timeCreation[0:2]+timeCreation[3:5]+timeCreation[6:8]
 
         dateCreation=formatCreationDay(filePath)
 
-        timeModification=time.ctime(os.path.getmtime(filePath))[11:19] ####
+        timeModification=time.ctime(os.path.getmtime(filePath))[11:19] 
         timeModification0=timeModification[0:2]+timeModification[3:5]+timeModification[6:8]
 
         dateModification=formatModificationDay(filePath)
 
-        sizeFile=str(os.path.getsize(filePath)) #size
+        sizeFile=str(os.path.getsize(filePath))
 
         data=(l[i], 'left', 'à copier',dateCreation,timeCreation0,dateModification,timeModification0,sizeFile,0)
         curseur.execute("INSERT INTO Files (nameFile, localisation, manipulation,creationDate,creationTime,lastModificationDate,lastModificationTime,size,state) VALUES (?,?,?,?,?,?,?,?,?)",data)
         #curseur.execute("INSERT INTO Files (nameFile, localisation, manipulation,creationDate,creationTime,lastModificationDate,lastModificationTime,size,state) VALUES ('coucou.txt', 'left', 'à copier',"+ dateCreation +","+timeCreation0+","+dateModification + ","+timeModification0+","+sizeFile+",0)")
 
 
-    for i in range(len(r)):#supprimé
+    for i in range(len(r)): #supprimé
         filePath=d2+"/"+str(r[i])
 
-        timeCreation=time.ctime(os.path.getctime(filePath))[11:19] ####
+        timeCreation=time.ctime(os.path.getctime(filePath))[11:19]
         timeCreation0=timeCreation[0:2]+timeCreation[3:5]+timeCreation[6:8]
 
         dateCreation=formatCreationDay(filePath)
 
-        timeModification=time.ctime(os.path.getmtime(filePath))[11:19] ####
+        timeModification=time.ctime(os.path.getmtime(filePath))[11:19]
         timeModification0=timeModification[0:2]+timeModification[3:5]+timeModification[6:8]
 
         dateModification=formatModificationDay(filePath)
 
-        sizeFile=str(os.path.getsize(filePath)) #size
+        sizeFile=str(os.path.getsize(filePath))
 
         data=(r[i],'right','à supprimer', dateCreation,timeCreation0,dateModification,timeModification0,sizeFile,0)
         curseur.execute("INSERT INTO Files (nameFile, localisation, manipulation,creationDate,creationTime,lastModificationDate,lastModificationTime,size,state) VALUES (?,?,?,?,?,?,?,?,?)",data)
 
     
-    for i in range(len(c1)):#none
+    for i in range(len(c1)): #none
         filePath=d2+"/"+str(c1[i])
 
-        timeCreation=time.ctime(os.path.getctime(filePath))[11:19] ####
+        timeCreation=time.ctime(os.path.getctime(filePath))[11:19]
         timeCreation0=timeCreation[0:2]+timeCreation[3:5]+timeCreation[6:8]
 
         dateCreation=formatCreationDay(filePath)
 
-        timeModification=time.ctime(os.path.getmtime(filePath))[11:19] ####
+        timeModification=time.ctime(os.path.getmtime(filePath))[11:19]
         timeModification0=timeModification[0:2]+timeModification[3:5]+timeModification[6:8]
 
         dateModification=formatModificationDay(filePath)
 
-        sizeFile=str(os.path.getsize(filePath)) #size
+        sizeFile=str(os.path.getsize(filePath))
 
         data=(c1[i],'both','None', dateCreation,timeCreation0,dateModification,timeModification0,sizeFile,1)
         curseur.execute("INSERT INTO Files (nameFile, localisation,manipulation,creationDate,creationTime,lastModificationDate,lastModificationTime,size,state) VALUES (?,?,?,?,?,?,?,?,?)",data)
@@ -407,17 +403,17 @@ def genBDD():
     for i in range(len(c2)): #modifié  
         filePath=d2+"/"+str(c2[i]) 
             
-        timeCreation=time.ctime(os.path.getctime(filePath))[11:19] ####
+        timeCreation=time.ctime(os.path.getctime(filePath))[11:19]
         timeCreation0=timeCreation[0:2]+timeCreation[3:5]+timeCreation[6:8]
 
         dateCreation=formatCreationDay(filePath)
 
-        timeModification=time.ctime(os.path.getmtime(filePath))[11:19] ####
+        timeModification=time.ctime(os.path.getmtime(filePath))[11:19]
         timeModification0=timeModification[0:2]+timeModification[3:5]+timeModification[6:8]
 
         dateModification=formatModificationDay(filePath)
 
-        sizeFile=str(os.path.getsize(filePath)) #size
+        sizeFile=str(os.path.getsize(filePath))
 
         data=(c2[i],'both','à modifier', dateCreation,timeCreation0,dateModification,timeModification0,sizeFile,0)
         curseur.execute("INSERT INTO Files (nameFile, localisation, manipulation,creationDate,creationTime,lastModificationDate,lastModificationTime,size,state) VALUES (?,?,?,?,?,?,?,?,?)",data)
@@ -429,7 +425,7 @@ def afficherBDD():
     baseDeDonnees = sqlite3.connect('files.db')
     curseur = baseDeDonnees.cursor()
     curseur.execute("CREATE TABLE IF NOT EXISTS Files (id INTEGER PRIMARY KEY AUTOINCREMENT, nameFile TEXT NOT NULL, localisation TEXT NOT NULL, manipulation TEXT NOT NULL, creationDate VARCHAR(50),creationTime TEXT, lastModificationDate VARCHAR(50),lastModificationTime VARCHAR(50), size INTEGER,state INTEGER)") # Création de la base de données
-    baseDeDonnees.commit() # On envoie la requête SQL
+    baseDeDonnees.commit()
     
     curseur.execute("SELECT * FROM Files")
     for resultat in curseur:
@@ -439,9 +435,7 @@ def afficherBDD():
     baseDeDonnees.close()
 
 ##----- Mode de fonctionnement -----##
-
-
-        
+   
 def modeContinuOn():
     print("mode continu")
     lblMode.configure(text="Mode Continu activé")
@@ -497,13 +491,7 @@ lblRightDirSize.grid(row=2, column=7, padx=3, pady=8, sticky=S+W+E)
 btnRightDir = Button(fen, text='Browse...', width='10',bg='white', command = selectRightFolder)
 btnRightDir.grid(row=1, column=8, padx=3, pady=8, sticky=S+W+E)
 
-
-#entLeftDir.focus_set()
-#entRightDir.focus_set()
-
-
-
-#Results
+#Resultats
 lblEtat=Label(fen, font=("Helvetica", 10))
 lblEtat.grid(row=9, column=1, columnspan=10, padx=3, pady=8, sticky=S+W+E)
 
@@ -545,9 +533,9 @@ lblOperations.grid(row=19, column=1, columnspan=10, padx=3, pady=8)
 lblAllOperations=Label(fen)
 lblAllOperations.grid(row=20, column=1, columnspan=10, padx=3, pady=8)
 
+##----- Les boutons -----##
 
-
-##----- Bouton Analysis -----##
+##----- Bouton Compare -----##
 btnStartAnalysis = Button(fen, text='ANALYSIS', width='8',bg='pale green', command=compareDir)
 btnStartAnalysis.grid(row=1, column=9, padx=3, pady=8)
 #btnStartAnalysis.focus_set()
@@ -570,8 +558,7 @@ btnContinuOff.grid(row=6, column=10, padx=3, pady=8)
 lblMode=Label(fen, font=("Helvetica", 6))
 lblMode.grid(row=7, column=10, padx=3, pady=8)
 
-
-##----- Bouton BDD -----##
+##----- Bouton afficher BDD -----##
 bouton_bdd = Button(fen, text='BDD', width='10',bg='orange', command=afficherBDD)
 bouton_bdd.grid(row=19,column=10, padx=3, pady=10)
 
@@ -583,8 +570,6 @@ bouton_quitter.grid(row=20,column=10, padx=3, pady=10)
 ##----- Entry Extension -----##
 lblExtension = Label(fen, text = "Extension:")
 lblExtension.grid(row=3,column=4, padx=3, pady=10)
-
-
 
 EtyExtension = ExtEntry(fen)
 EtyExtension.grid(row=3,column=5, padx=3, pady=10)
