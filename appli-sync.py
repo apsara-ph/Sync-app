@@ -1,5 +1,6 @@
 ##----- Importation des Modules -----##
 from tkinter import *
+import tkinter as tk
 from tkinter import filedialog
 import os.path, time
 import filecmp
@@ -584,11 +585,22 @@ bouton_quitter.grid(row=20,column=10, padx=3, pady=10)
 ##----- Entry Extension -----##
 lblExtension = Label(fen, text = "Extension:")
 lblExtension.grid(row=3,column=4, padx=3, pady=10)
-EtyExtension = Entry(fen, bd = 5)
-EtyExtension.insert(END, 'Exemple.txt')
-EtyExtension.grid(row=3,column=5, padx=3, pady=10)
-EtyExtension.bind("<FocusIn>", lambda args: EtyExtension.delete('0', 'end'))
 
+class ExtEntry(tk.Frame):
+    def __init__(self, parent):
+        tk.Frame.__init__(self, parent, borderwidth=1, relief="sunken", background="white")
+
+        dot = tk.Label(self, text=".", background="white")
+        dot.pack(side="left")
+
+        self.entry = tk.Entry(self, borderwidth=0, justify="left", highlightthickness=0, background="white")
+        self.entry.pack(side="left")
+    
+    def get(self):
+        return ".".join(self.entry.get())
+
+EtyExtension = ExtEntry(fen)
+EtyExtension.grid(row=3,column=5, padx=3, pady=10)
 
 ##----- Les évènements -----##
 fen.bind("<Escape>", remiseZero)
