@@ -2,12 +2,10 @@
 from tkinter import *
 import tkinter as tk
 from tkinter import filedialog
-import os.path, time
-import filecmp
-import subprocess
-import os, shutil
+import os.path, time, filecmp, subprocess, os, shutil
 import sqlite3
 from intervallometre import Intervallometre
+from extEntry import ExtEntry
 
 ##----- Définition des Fonctions -----##
 
@@ -113,21 +111,21 @@ def synchroDirBIS(d1,d2):
         print("Vous avez sélectionné le même dossier")
     else:
         for i in range (len(l)):
-            print(l[i] + " à copier")
-            if os.path.isfile(d1+"/"+str(l[i]))==True:
-                if (str(EtyExtension.get()) == str(l[i]).split('.')[-1]) or (str(EtyExtension.get()) == ""):
+            if (str(EtyExtension.get()) == str(l[i]).split('.')[-1]) or (str(EtyExtension.get()) == ""):
+                print(l[i] + " à copier")
+                if os.path.isfile(d1+"/"+str(l[i]))==True:
                     shutil.copy(d1+"/"+str(l[i]), d2+"/"+str(l[i])) #copie de fichier
                     nb_creatBIS+=1
-            else:
-                shutil.copytree(d1+"/"+str(l[i]), d2+"/"+str(l[i])) #copie de repertoire
-                nb_creatBIS+=1
+                else:
+                    shutil.copytree(d1+"/"+str(l[i]), d2+"/"+str(l[i])) #copie de repertoire
+                    nb_creatBIS+=1
         l=[]
         for i in range (len(r)):
+            if (str(EtyExtension.get()) == str(r[i]).split('.')[-1]) or (str(EtyExtension.get()) == ""):
                 print(r[i] + " à supprimer")
                 if os.path.isfile(d2+"/"+str(r[i]))==True:
-                    if (str(EtyExtension.get()) == str(r[i]).split('.')[-1]) or (str(EtyExtension.get()) == ""):
-                        os.remove(d2+"/"+str(r[i])) #supression d'un fichier
-                        nb_delBIS+=1
+                    os.remove(d2+"/"+str(r[i])) #supression d'un fichier
+                    nb_delBIS+=1
                 else:
                     shutil.rmtree(os.path.join(d2,str(r[i]))) #supression d'un repertoire
                     nb_delBIS+=1
@@ -173,24 +171,24 @@ def synchroDir():
         print("Analyse des manipulations de synchronisation")
         lblEtat.configure(text='Synchronization...')
         for i in range (len(l)):
-            print(l[i] + " à copier")
-            if os.path.isfile(d1+"/"+str(l[i]))==True:
-                if (str(EtyExtension.get()) == str(l[i]).split('.')[-1]) or (str(EtyExtension.get()) == ""):
-                    shutil.copy(d1+"/"+str(l[i]), d2+"/"+str(l[i])) #copie de fichier
+            if (str(EtyExtension.get()) == str(l[i]).split('.')[-1]) or (str(EtyExtension.get()) == ""):
+                print(l[i] + " à copier")
+                if os.path.isfile(d1+"/"+str(l[i]))==True:
+                        shutil.copy(d1+"/"+str(l[i]), d2+"/"+str(l[i])) #copie de fichier
+                        nb_creat+=1
+                else:
+                    shutil.copytree(d1+"/"+str(l[i]), d2+"/"+str(l[i])) #copie de repertoire
                     nb_creat+=1
-            else:
-                shutil.copytree(d1+"/"+str(l[i]), d2+"/"+str(l[i])) #copie de repertoire
-                nb_creat+=1
         l=[]
         for i in range (len(r)):
-            print(r[i] + " à supprimer")
-            if os.path.isfile(d2+"/"+str(r[i]))==True:
-                if (str(EtyExtension.get()) == str(r[i]).split('.')[-1]) or (str(EtyExtension.get()) == ""):
+            if (str(EtyExtension.get()) == str(r[i]).split('.')[-1]) or (str(EtyExtension.get()) == ""):
+                print(r[i] + " à supprimer")
+                if os.path.isfile(d2+"/"+str(r[i]))==True:
                     os.remove(d2+"/"+str(r[i])) #supression d'un fichier
                     nb_del+=1
-            else:
-                shutil.rmtree(os.path.join(d2,str(r[i]))) #supression d'un repertoire
-                nb_del+=1
+                else:
+                    shutil.rmtree(os.path.join(d2,str(r[i]))) #supression d'un repertoire
+                    nb_del+=1
         r=[]
         for i in range(len(c)):
             if os.path.isfile(d1+"/"+str(c[i]))==True:
@@ -586,18 +584,7 @@ bouton_quitter.grid(row=20,column=10, padx=3, pady=10)
 lblExtension = Label(fen, text = "Extension:")
 lblExtension.grid(row=3,column=4, padx=3, pady=10)
 
-class ExtEntry(tk.Frame):
-    def __init__(self, parent):
-        tk.Frame.__init__(self, parent, borderwidth=1, relief="sunken", background="white")
 
-        dot = tk.Label(self, text=".", background="white")
-        dot.pack(side="left")
-
-        self.entry = tk.Entry(self, borderwidth=0, justify="left", highlightthickness=0, background="white")
-        self.entry.pack(side="left")
-    
-    def get(self):
-        return self.entry.get()
 
 EtyExtension = ExtEntry(fen)
 EtyExtension.grid(row=3,column=5, padx=3, pady=10)
