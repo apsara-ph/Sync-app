@@ -159,6 +159,8 @@ def synchroDir():
     nb_del=0
     nb_modif=0
     nb_creat=0
+
+    
     
     d1=repLeft
     d2=repRight
@@ -175,7 +177,7 @@ def synchroDir():
         for i in range (len(l)):
             print(l[i] + " à copier")
             if os.path.isfile(d1+"/"+str(l[i]))==True:
-                if str(EtyExtension.get()) in str(l[i]):
+                if str(EtyExtension.get()) == str(l[i]).split('.')[-1]:
                     shutil.copy(d1+"/"+str(l[i]), d2+"/"+str(l[i])) #copie de fichier
                     nb_creat+=1
             else:
@@ -185,7 +187,7 @@ def synchroDir():
         for i in range (len(r)):
             print(r[i] + " à supprimer")
             if os.path.isfile(d2+"/"+str(r[i]))==True:
-                if str(EtyExtension.get()) in str(r[i]):
+                if str(EtyExtension.get()) == str(r[i]).split('.')[-1]:
                     os.remove(d2+"/"+str(r[i])) #supression d'un fichier
                     nb_del+=1
             else:
@@ -194,7 +196,7 @@ def synchroDir():
         r=[]
         for i in range(len(c)):
             if os.path.isfile(d1+"/"+str(c[i]))==True:
-                if str(EtyExtension.get()) in str(c[i]):
+                if str(EtyExtension.get()) == str(c[i]).split('.')[-1]:
                     if (filecmp.cmp(d1+"/"+str(c[i]), d2+"/"+str(c[i]), shallow=True)==True):
                         print(str(c[i])+": OK !")
                     else:
@@ -597,7 +599,7 @@ class ExtEntry(tk.Frame):
         self.entry.pack(side="left")
     
     def get(self):
-        return ".".join(self.entry.get())
+        return self.entry.get()
 
 EtyExtension = ExtEntry(fen)
 EtyExtension.grid(row=3,column=5, padx=3, pady=10)
