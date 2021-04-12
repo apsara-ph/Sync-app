@@ -199,7 +199,7 @@ def synchroDir(): # Synchronisation des dossiers
                         shutil.copy(d1+"/"+str(c[i]), d2+"/"+str(c[i])) #copie du nouveau fichier
                         nb_modif+=1
             else:
-                if (synchroDirBIS(d1+"/"+str(c[i]), d2+"/"+str(c[i]))==True):# A REVOIR
+                if (synchroDirBIS(d1+"/"+str(c[i]), d2+"/"+str(c[i]))==True):
                     print(str(c[i])+": OK !")
                     nb_modif+=nb_modifBIS
                     nb_creat+=nb_creatBIS
@@ -427,9 +427,14 @@ def afficherBDD():
     curseur.execute("CREATE TABLE IF NOT EXISTS Files (id INTEGER PRIMARY KEY AUTOINCREMENT, nameFile TEXT NOT NULL, localisation TEXT NOT NULL, manipulation TEXT NOT NULL, creationDate VARCHAR(50),creationTime TEXT, lastModificationDate VARCHAR(50),lastModificationTime VARCHAR(50), size INTEGER,state INTEGER)") # Création de la base de données
     baseDeDonnees.commit()
     
-    curseur.execute("SELECT * FROM Files")
-    for resultat in curseur:
-        print(resultat)
+    if (str(EtyExtension.get()) !=""):
+        curseur.execute("SELECT * FROM Files WHERE nameFile LIKE '%."+str(EtyExtension.get())+"'")
+        for resultat in curseur:
+            print(resultat)
+    else:
+        curseur.execute("SELECT * FROM Files")
+        for resultat in curseur:
+            print(resultat)
 
     baseDeDonnees.commit()
     baseDeDonnees.close()

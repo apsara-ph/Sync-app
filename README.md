@@ -11,11 +11,28 @@ Application graphique codée en python avec Tkinter
 
 ## Fonctionnement
 La synchronisation s'effectue en se référant sur le dossier de gauche.  
-*Remarque* : la synchronisation par extension s'effectue de manière récursive seulement dans le(s) sous-repertoire(s) de droite communs pré-existant(s).  
-    
+*Rq* : la synchronisation par extension s'effectue de manière récursive seulement dans le(s) sous-repertoire(s) de droite communs pré-existant(s).  
+
+La base de donnée est constituée des attributs suivants :
+
+| Attribut            | Type          | Indication                     |
+| :------------------ | :------------:| :-----------------------------:|
+| id                  | INTEGER       |                                |
+| nameFile            | TEXT          |                                |
+| localisation        | TEXT          | left/right/both                | 
+| manipulation        | TEXT          | à créer/à modifier/à supprimer |
+| creationDate        | VARCHAR       | format : jjmmaaaa              |
+| creationTime        | VARCHAR       | format : hhmmss                | 
+| lastModificationDate| VARCHAR       | format : jjmmaaaa              |
+| lastModificationTime| VARCHAR       | format : hhmmss                |
+| size                | INTEGER       | (en octet)                     | 
+| state               | INTEGER       | 0/1 : Non traitée/Traitée      | 
+
+
 La base de données est générée automatiquement suite aux évenements suivants :
-* Bouton __ANALYSIS__: elle indique pour chaque élèment qui compose les dossiers, leur état actuel (localisation, date/heure de création, date/heure de modification, taille) et les opérations à effectuer pour une eventuelle synchronisation (création, modification, suppression)
-* Bouton __SYNCHRO__: elle informe de l'état de l'opération (0/1: Non traitée/Traitée)
+* Bouton __ANALYSIS__: elle affiche pour chaque élèment qui compose les dossiers, leur état actuel ainsi que les manipulations à effectuer pour une eventuelle synchronisation  
+*Rq* : si une extension est renseignée, le bouton __BDD__ affichera uniquement les informations des fichiers correspondants à cette extension
+* Bouton __SYNCHRO__: elle informe de l'état de l'opération
 
 ## Installation
 1. Utilisez Python Version 3.9.2
