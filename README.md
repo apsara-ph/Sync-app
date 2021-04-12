@@ -8,7 +8,7 @@ Application graphique codée en python avec Tkinter
 - Possibilité de choisir le fonctionnement (comparaison/synchronisation des fichiers) en mode continu (Bouton __ON__/__OFF__)
 - Affichage de la base de données associée à une comparaison/synchronisation des fichiers (Bouton __BDD__)
 - Réinitialisation de la base de données et des élèments de comparaison (Bouton __RESET__)
-![Screenshot](capture.png)
+![Screenshot](capture.png width=70)
 ## Fonctionnement
 La synchronisation s'effectue en se référant sur le dossier de gauche.  
 *Rq* : la synchronisation par extension s'effectue de manière récursive seulement dans le(s) sous-repertoire(s) de droite communs pré-existant(s).  
