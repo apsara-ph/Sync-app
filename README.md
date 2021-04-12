@@ -10,7 +10,8 @@ Application graphique codée en python avec Tkinter
 - Réinitialisation de la base de données (Bouton RESET)
 
 ## Fonctionnement
-La synchronisation s'effectue en se référant sur le dossier de gauche. Ainsi, la synchronisation par extension s'effectue de manière récursive seulement dans le(s) sous-repertoire(s) de droite pré-existant(s).  
+La synchronisation s'effectue en se référant sur le dossier de gauche.  
+_remarque_: la synchronisation par extension s'effectue de manière récursive seulement dans le(s) sous-repertoire(s) de droite en commun pré-existant(s).  
     
 La base de données est générée automatiquement:
 * suite à une comparaison des fichiers (Bouton ANALYSIS): elle indique pour chaque élèment des dossiers, leur état actuel (localisation, date/heure de création, date/heure de modification, taille) et les opérations à effectuer pour une eventuelle synchronisation (création, modification, suppression)
