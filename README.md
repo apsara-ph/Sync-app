@@ -12,8 +12,8 @@ Application graphique codée en python avec Tkinter
 ## Fonctionnement
 - La synchronisation s'effectue en se référant sur le dossier de gauche. Ansi, la synchronisation par extension s'effectue de manière récursive seulement dans le(s) sous-repertoire(s) de droite pré-existant(s)
 - La base de donnée est générée automatiquement:
-* suite à une comparaison des fichiers (Bouton ANALYSIS): elle indique pour chaque élèment des dossiers, leur état actuel (localisation, date/heure de création, date/heure de modification, taille) et les opérations à effectuer pour une eventuelle synchronisation (création, modification, suppression)
-* suite à une opération de synchronisation (Bouton SYNCHRO): elle informe de l'état de l'opération (0/1: Non traitée/Traitée)
+** suite à une comparaison des fichiers (Bouton ANALYSIS): elle indique pour chaque élèment des dossiers, leur état actuel (localisation, date/heure de création, date/heure de modification, taille) et les opérations à effectuer pour une eventuelle synchronisation (création, modification, suppression)
+** suite à une opération de synchronisation (Bouton SYNCHRO): elle informe de l'état de l'opération (0/1: Non traitée/Traitée)
 
 ## Installation
 1. Utilisez Python Version 3.9.2
