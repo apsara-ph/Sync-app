@@ -12,7 +12,7 @@ Application graphique codée en python avec Tkinter
 ![Screenshot](capture.png)  
 
 ## Fonctionnement
-La synchronisation s'effectue en se référant sur le dossier de gauche.  
+La synchronisation s'effectue en se référant au dossier de gauche.  
 *Rq* : la synchronisation par extension s'effectue de manière récursive seulement dans le(s) sous-repertoire(s) de droite communs pré-existant(s).  
 
 La base de donnée est constituée des attributs suivants :
