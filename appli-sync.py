@@ -322,7 +322,7 @@ def genBDD():
     c1=[]
     c2=[]
 
-    filePath="monDossier1/file0"
+    filePath=""
 
     baseDeDonnees = sqlite3.connect('files.db')
     curseur = baseDeDonnees.cursor()
