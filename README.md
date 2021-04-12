@@ -6,13 +6,13 @@ Application graphique codée en python avec Tkinter
 - Deux options de synchronisation : intégrale ou par filtre d'extension (Bouton SYNCHRO)
 - Comparaison des deux dossiers selectionnés (Bouton ANALYSIS)
 - Possibilité de choisir le fonctionnement (comparaison/synchronisation des fichiers) en mode continu (Bouton ON/OFF)
-- Affichage de la base de donnée associée à une comparaison/synchronisation des fichiers (Bouton BDD)
+- Affichage de la base de données associée à une comparaison/synchronisation des fichiers (Bouton BDD)
 - Réinitialisation de la base de données (Bouton RESET)
 
 ## Fonctionnement
 La synchronisation s'effectue en se référant sur le dossier de gauche. Ainsi, la synchronisation par extension s'effectue de manière récursive seulement dans le(s) sous-repertoire(s) de droite pré-existant(s).  
     
-La base de donnée est générée automatiquement:
+La base de données est générée automatiquement:
 * suite à une comparaison des fichiers (Bouton ANALYSIS): elle indique pour chaque élèment des dossiers, leur état actuel (localisation, date/heure de création, date/heure de modification, taille) et les opérations à effectuer pour une eventuelle synchronisation (création, modification, suppression)
 * suite à une opération de synchronisation (Bouton SYNCHRO): elle informe de l'état de l'opération (0/1: Non traitée/Traitée)
 
