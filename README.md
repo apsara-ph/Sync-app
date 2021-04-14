@@ -47,3 +47,8 @@ La base de données est générée automatiquement suite aux évenements suivant
    py appli-sync.py
    ```
 4. Sélectionnez les dossiers de votre choix puis testez !
+
+## Autheurs
+Lucas Enos   
+Paul-Henri François  
+Pheaktra Thoun  
